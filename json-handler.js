@@ -1,7 +1,7 @@
 var Hapi = require('hapi');
 var Joi = require('joi');
-var mongo = require('mongoskin');
-var toObjectID = mongo.helper.toObjectID;
+var mongo = require('mongodb');
+var toObjectID = mongo.ObjectID;
 var async = require('async');
 
 module.exports = function(path, auth) {
@@ -49,7 +49,7 @@ module.exports = function(path, auth) {
 
                 cb(null, jobs.length);
               });
-              
+
             },
             // Get the number of completed jobs
             completedJobs: function(cb){
@@ -72,7 +72,7 @@ module.exports = function(path, auth) {
               agenda.jobs({
                 disabled: { $ne: true },
                 lockedAt: {$lt: now},
-                lastRunAt: {$lt: now}, 
+                lastRunAt: {$lt: now},
                 lastFinishedAt: {$exists: false}
               }, function(err, jobs) {
 
@@ -88,11 +88,11 @@ module.exports = function(path, auth) {
             failedJobs: function(cb) {
 
               agenda.jobs({
-                disabled: { $ne: true }, 
+                disabled: { $ne: true },
                 lastFinishedAt: {$lt: now},
                 failedAt: {$lt: now}
               }, function(err, jobs) {
-                
+
                 if (err) {
                   cb(err);
                 }
